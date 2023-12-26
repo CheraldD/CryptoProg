@@ -14,12 +14,11 @@ void encrypt(std::string keystr,const char * orig_file,const char * encr_file,co
     CryptoPP::PKCS12_PBKDF<CryptoPP::SHA256> pbkdf;
     pbkdf.DeriveKey(key,key.size(),0,reinterpret_cast<const CryptoPP::byte*>(keystr.data()),keystr.size(),nullptr,0,1000,0.0f);
     CryptoPP::AutoSeededRandomPool prng;
-    memcpy(key,keystr.c_str(),CryptoPP::AES::DEFAULT_KEYLENGTH);
     CryptoPP::SecByteBlock iv(CryptoPP::AES::BLOCKSIZE);
     prng.GenerateBlock(iv, iv.size());
     CryptoPP::StringSource(iv, iv.size(), true,
                             new CryptoPP::HexEncoder(
-                                new CryptoPP::FileSink(iv_file)));
+                                new CryptoPP::FileSink(iv_file)));                        
     std::clog << "IV generated and stored to file " << iv_file << std::endl;
     CryptoPP::CBC_Mode<CryptoPP::AES>::Encryption encr;
     encr.SetKeyWithIV( key, key.size(), iv );
